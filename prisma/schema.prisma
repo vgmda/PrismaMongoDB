@@ -9,6 +9,20 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model Cat {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  color   String
+  breed   Breed  @relation(fields: [breedId], references: [id])
+  breedId String @db.ObjectId
+}
+
+model Breed {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  name   String @unique
+  breeds Cat[]
 }
